@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    Order Service
+    Sample SAM Template for Order Service
+
+Globals:
+    Function:
+        Timeout: 3
+Resources:
+
+    InvokingApi:
+        Type: AWS::Serverless::HttpApi
+        Properties:
+          StageName: default
+          CorsConfiguration:
+            AllowOrigins: "'*'"
+            AllowMethods: "'*'"
+            AllowHeaders: "'*'"
+
+    CreateOrderFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: src/
+            Handler: CreateOrder.lambda_handler
+            Runtime: python3.7
+            Events:
+                CreateOrder:
+                    Type: HttpApi
+                    Properties:
+                        Path: /order
+                        Method: post
+                        ApiId: !Ref InvokingApi
+
+
+    OrderQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: OrderQueue
+
+Outputs:
+    OrderQueueUrl:
+        Description: "Order Queue URL"
+        Value: !GetAtt OrderQueue.Arn
+        Export:
+            Name: OrderQueueUrl
+
+
+
+
+
+
+    
+
