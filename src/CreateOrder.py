@@ -14,7 +14,6 @@ def lambda_handler(event, context):
     print("Creating order..")
     print("sending in Queue..")
 
-
     return {
         'statusCode': 200,
         'body': json.dumps('Order created!')
