@@ -59,6 +59,12 @@ Resources:
             TopicName: OrderNotificationTopic
             DisplayName: Order Notification Topic
         
+    OrderNotificationSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Endpoint: qtanweer.mts41ceme@gmail.com
+            Protocol: email
+            TopicArn: !Ref OrderNotficationTopic
 
 Outputs:
     OrderQueueUrl:
