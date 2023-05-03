@@ -1,22 +1,24 @@
 import json
 import boto3
+import os
 
-sqs = boto3.client('sqs')
+
 sns = boto3.client('sns')
-queue_url = 'https://sqs.ap-southeast-1.amazonaws.com/830103335377/OrderQueue'
-topic_arn = 'arn:aws:sns:ap-southeast-1:830103335377:OrderTopic'
-
-
+# queue_url = 'https://sqs.ap-southeast-1.amazonaws.com/830103335377/OrderQueue'
+# topic_arn = 'arn:aws:sns:ap-southeast-1:830103335377:OrderTopic'
+topic_arn = os.environ['ORDER_TOPIC_ARN'] # This is the environment variable we set in the Lambda function
+queue_url = os.environ['ORDER_QUEUE_URL'] # This is the environment variable we set in the Lambda function
+# queue = boto3.client('sqs').get_queue_url(QueueName=queue_url)['QueueUrl']
+sqs = boto3.resource('sqs').Queue(queue_url)
 
 def lambda_handler(event, context):
-    for record in event['Records']:
-        message = json.loads(record['body'])
-        order_id = message['order_id']
-        customer_name = message['customer_name']
-        order_total = message['order_total']
+    for message in sqs.receive_messages():
+        print(message.body)
+        
+        message_body = json.loads(message.body)
+        subject = message_body['subject']
+        message = message_body['message']
 
-        subject = f'New Order {order_id}'
-        message = f'Customer Name: {customer_name}\nOrder Total: {order_total}'
 
         response = sns.publish(
             TopicArn=topic_arn,
@@ -24,7 +26,7 @@ def lambda_handler(event, context):
             Message=message
         )
 
-        print(response)
+        message.delete()
 
     return {
         'statusCode': 200,

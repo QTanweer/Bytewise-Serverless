@@ -39,17 +39,17 @@ Resources:
             CodeUri: src/
             Handler: ProcessOrder.lambda_handler
             Runtime: python3.7
+            Environment:
+                Variables:
+                    ORDER_TOPIC_ARN: !Ref OrderNotficationTopic
+                    QUEUE_URL: !ImportValue OrderQueueUrl
             Events:
                 ProcessOrder:
                     Type: SQS
                     Properties:
                         Queue: !ImportValue OrderQueueUrl
                         BatchSize: 1
-                OrderNotification:
-                    Type: SNS
-                    Properties:
-                        Topic: !ImportValue OrderTopicArn
-                    
+              
 
 
     OrderQueue:
