@@ -6,7 +6,17 @@ queue_url = 'https://sqs.ap-southeast-1.amazonaws.com/830103335377/OrderQueue'
 
 
 def lambda_handler(event, context):
-    order = json.loads(event['body'])
+
+    try:
+        order = json.loads(event['body'])
+    except KeyError:
+        return {
+            'statusCode': 400,
+            'body': json.dumps({
+                'message': 'Invalid request body'
+            })
+        }
+
     response = sqs.send_message(
         QueueUrl=queue_url,
         MessageBody=json.dumps(order)
