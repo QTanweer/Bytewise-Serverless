@@ -45,7 +45,11 @@ Resources:
                     Properties:
                         Queue: !ImportValue OrderQueueUrl
                         BatchSize: 1
-
+                OrderNotification:
+                    Type: SNS
+                    Properties:
+                        Topic: !ImportValue OrderTopicArn
+                    
 
 
     OrderQueue:
