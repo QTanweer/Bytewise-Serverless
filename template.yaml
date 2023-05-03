@@ -32,11 +32,33 @@ Resources:
                         Method: post
                         ApiId: !Ref InvokingApi
 
+    
+    ProcessOrderFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: src/
+            Handler: ProcessOrder.lambda_handler
+            Runtime: python3.7
+            Events:
+                ProcessOrder:
+                    Type: SQS
+                    Properties:
+                        Queue: !ImportValue OrderQueueUrl
+                        BatchSize: 1
+
+
 
     OrderQueue:
         Type: AWS::SQS::Queue
         Properties:
             QueueName: OrderQueue
+
+    OrderNotficationTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            TopicName: OrderNotificationTopic
+            DisplayName: Order Notification Topic
+        
 
 Outputs:
     OrderQueueUrl:
@@ -44,6 +66,12 @@ Outputs:
         Value: !GetAtt OrderQueue.Arn
         Export:
             Name: OrderQueueUrl
+
+    OrderTopicArn:
+        Description: "Order Notification Topic"
+        Value: !Ref OrderNotficationTopic
+        Export:
+            Name: OrderTopicArn
 
 
 
