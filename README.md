@@ -93,4 +93,4 @@ These environment variables are acquired from AWS Console, and defined as secret
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT Open](https://choosealicense.com/licenses/mit/)
