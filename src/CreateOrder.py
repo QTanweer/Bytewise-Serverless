@@ -4,11 +4,11 @@ import boto3
 sqs = boto3.client('sqs')
 queue_url = 'https://sqs.ap-southeast-1.amazonaws.com/830103335377/OrderQueue'
 
-
 def lambda_handler(event, context):
 
     try:
-        order = json.loads(event['body'])
+        print(event)
+        order = event
     except KeyError:
         return {
             'statusCode': 400,
@@ -28,4 +28,3 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': json.dumps('Order created!')
     }
-
