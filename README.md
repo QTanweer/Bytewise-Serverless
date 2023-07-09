@@ -1,4 +1,4 @@
-# Bytewise-serverless-Task1
+# Bytewise-serverless-Task
 
 Creating a simple Ordering service with AWS Serverless Architecture using AWS SAM as Infrastructure-as-Code (IaC).
 
